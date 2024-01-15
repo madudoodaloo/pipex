@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msilva-c <msilva-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: msilva-c <msilva-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 03:37:38 by msilva-c          #+#    #+#             */
-/*   Updated: 2024/01/15 18:37:47 by msilva-c         ###   ########.fr       */
+/*   Updated: 2024/01/15 19:04:13 by msilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,8 @@ void	command_1(char **argv, char **envp, t_pipex *pipex)
 	pipex->dup_fd[1] = dup2(pipex->pipe_fd[1], STDOUT_FILENO);
 	close(pipex->pipe_fd[1]);
 	close(pipex->pipe_fd[0]);
-	execve(full_path, command_split, envp);
-	/*close(pipex->infile);
-	close(pipex->outfile);*/
-	exit_and_free(pipex);
+	if (execve(full_path, command_split, envp) == -1)
+		exit_and_free(pipex);
 }
 
 void	command_2(char **argv, char **envp, t_pipex *pipex)
@@ -54,11 +52,8 @@ void	command_2(char **argv, char **envp, t_pipex *pipex)
 	pipex->dup_fd[1] = dup2(pipex->outfile, STDOUT_FILENO);
 	close(pipex->outfile);
 	close(pipex->pipe_fd[1]);
-	execve(full_path, command_split, envp);
-/* 	close(pipex->infile);
-	close(pipex->outfile); */
-/* 	ft_free_all(command_split); */
-	exit_and_free(pipex);
+	if (execve(full_path, command_split, envp) == -1)
+		exit_and_free(pipex);
 }
 
 void	ft_pipex(char **argv, char **envp, t_pipex *pipex)
@@ -77,6 +72,7 @@ void	ft_pipex(char **argv, char **envp, t_pipex *pipex)
 			exit_and_free(pipex);
 		close(pipex->pipe_fd[0]);
 		command_1(argv, envp, pipex);
+		
 	}
 	ft_second_child(argv, envp, pipex);
 	close(pipex->pipe_fd[0]);
