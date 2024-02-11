@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msilva-c <msilva-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: msilva-c <msilva-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 12:33:37 by gcapa-pe          #+#    #+#             */
-/*   Updated: 2024/01/15 18:47:26 by msilva-c         ###   ########.fr       */
+/*   Updated: 2024/02/10 18:58:23 by msilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-static int	count_words(char *str, char c, t_pipex *pipex)
+int	count_words(char *str, char c, t_pipex *pipex)
 {
 	int	i;
 	int	trigger;
@@ -20,7 +20,7 @@ static int	count_words(char *str, char c, t_pipex *pipex)
 	i = 0;
 	trigger = 0;
 	if (str[0] == c)
-		exit_and_free(pipex); // mandar pipex para esta função para poder dar close 
+		exit_and_free(pipex, "");
 	while (*str)
 	{
 		if (*str != c && trigger == 0)
@@ -35,7 +35,7 @@ static int	count_words(char *str, char c, t_pipex *pipex)
 	return (i);
 }
 
-static char	*word_dup(char *str, int start, int finish)
+char	*word_dup(char *str, int start, int finish)
 {
 	char	*word;
 	int		i;
@@ -50,18 +50,12 @@ static char	*word_dup(char *str, int start, int finish)
 	return (word);
 }
 
-char	**ft_split(char *s, char c, t_pipex *pipex)
+char	**ft_split2(char *s, char c, char **split)
 {
 	size_t	i;
 	size_t	j;
 	int		index;
-	char	**split;
 
-	if (!s || !*s)
-		return (NULL);
-	split = malloc((count_words(s, c, pipex) + 1) * sizeof(char *));
-	if (!s || !(split))
-		return (0);
 	i = 0;
 	j = 0;
 	index = -1;
@@ -78,4 +72,16 @@ char	**ft_split(char *s, char c, t_pipex *pipex)
 	}
 	split[j] = NULL;
 	return (split);
+}
+
+char	**ft_split(char *s, char c, t_pipex *pipex)
+{
+	char	**split;
+
+	if (!s || !*s)
+		return (NULL);
+	split = malloc((count_words(s, c, pipex) + 1) * sizeof(char *));
+	if (!s || !(split))
+		return (0);
+	return (ft_split2(s, c, split));
 }

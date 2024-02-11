@@ -6,7 +6,7 @@
 /*   By: msilva-c <msilva-c@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 16:10:17 by gcapa-pe          #+#    #+#             */
-/*   Updated: 2024/01/15 18:40:03 by msilva-c         ###   ########.fr       */
+/*   Updated: 2024/02/09 17:26:03 by msilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ char	*path_and_check2(char *command, t_pipex *pipex)
 	int		i;
 
 	i = 0;
+	str = NULL;
+	if (access(command, F_OK) == 0)
+		return (ft_strjoin(command, ""));
 	while (pipex->paths[i])
 	{
 		str = ft_strjoin(pipex->paths[i], command);
@@ -43,11 +46,7 @@ char	*path_and_check2(char *command, t_pipex *pipex)
 		i++;
 	}
 	if (pipex->paths[i] == NULL)
-	{
-		//ft_free_all(pipex->paths);
-		return (command);
-	}
-	//ft_free_all(pipex->paths);
+		return (ft_strjoin(command, ""));
 	return (str);
 }
 
@@ -58,18 +57,20 @@ char	*path_and_check(char **envp, char *command, t_pipex *pipex)
 
 	i = 0;
 	if (!command)
-		exit_and_free(pipex);
-	while (ft_strncmp(envp[i], "PATH=", 5))
+		exit_and_free(pipex, "malloc");
+	while (envp[i] && ft_strncmp(envp[i], "PATH=", 5))
 		i++;
+	if (!envp[i])
+		return (NULL);
 	pipex->paths = ft_split(envp[i] + 5, ':', pipex);
 	if (!pipex->paths)
-		exit_and_free(pipex);
+		exit_and_free(pipex, "malloc");
 	i = -1;
 	while (pipex->paths[++i])
 	{
-		temp1 = pipex->paths[i];
-		pipex->paths[i] = ft_strjoin(temp1, "/");
-		free(temp1);
+		temp1 = ft_strjoin(pipex->paths[i], "/");
+		free(pipex->paths[i]);
+		pipex->paths[i] = temp1;
 	}
 	return (path_and_check2(command, pipex));
 }

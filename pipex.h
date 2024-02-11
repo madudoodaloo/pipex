@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pipex.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: msilva-c <msilva-c@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: msilva-c <msilva-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 03:37:59 by msilva-c          #+#    #+#             */
-/*   Updated: 2024/01/15 18:10:31 by msilva-c         ###   ########.fr       */
+/*   Updated: 2024/02/10 18:58:21 by msilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,14 @@ typedef struct s_pipex
 	int		outfile;
 	int		pipe_fd[2];
 	int		dup_fd[2];
-	char	**paths; 
+	char	**paths;
+	char	**command_split; 
 	char	*command;
 	int		exit_status;
 }			t_pipex;
 
 /* main functions */
+void		init_all(t_pipex *pipex);
 void		ft_pipex(char **argv, char **envp, t_pipex *pipex);
 void		ft_second_child(char **argv, char **envp, t_pipex *pipex);
 void		command_1(char **argv, char **envp, t_pipex *pipex);
@@ -51,13 +53,13 @@ char		*path_and_check(char **envp, char *command, t_pipex *pipex);
 char		*path_and_check2(char *command, t_pipex *pipex);
 
 /* memory management */
-void		error(void);
 void		ft_free_all(char **path);
-int			exit_and_free(t_pipex *pipex);
+int			exit_and_free(t_pipex *pipex, char *msg);
 
 /* split */
-char		*triple_strjoin(char *s1, char *s2, char *s3);
+char		*word_dup(char *str, int start, int finish);
+int			count_words(char *str, char c, t_pipex *pipex);
+char		**ft_split2(char *s, char c, char **split);
 char		**ft_split(char *str, char ch, t_pipex *pipex);
-void		*ft_memcpy(void *dest, const void *src, size_t n);
 
 #endif
