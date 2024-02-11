@@ -6,7 +6,7 @@
 /*   By: msilva-c <msilva-c@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 03:37:38 by msilva-c          #+#    #+#             */
-/*   Updated: 2024/02/09 19:01:04 by msilva-c         ###   ########.fr       */
+/*   Updated: 2024/02/11 17:41:40 by msilva-c         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,5 +106,5 @@ int	main(int argc, char *argv[], char *envp[])
 		exit_and_free(&pipex, NULL);
 	}
 	else
-		exit_and_free(&pipex, NULL);
+		write(1, "wrong arguments\n", 16);
 }
